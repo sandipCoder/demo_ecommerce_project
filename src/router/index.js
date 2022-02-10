@@ -19,10 +19,24 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
+
+  {
+    path: "/productview/:id",
+    name: "Productview",
+    component: () =>
+      import(/* webpackChunkName: "Productview" */ "../views/Productview.vue"),
+  },
+  {
+    path: "/cart",
+    name: "Cart",
+    component: () =>
+      import(/* webpackChunkName: "cart" */ "../views/Cart.vue"),
+  },
 ];
 
 const router = new VueRouter({
   routes,
+  mode: 'history',
+  base: process.env.BASE_URL,
 });
-
 export default router;
