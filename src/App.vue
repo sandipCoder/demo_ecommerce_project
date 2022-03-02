@@ -22,6 +22,8 @@ export default{
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
    background:#eee;
+   min-height: 100vh;
+   padding-bottom: 5rem;
 }
 #nav a {
   font-weight: 500;

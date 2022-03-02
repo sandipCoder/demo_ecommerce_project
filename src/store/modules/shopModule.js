@@ -4,7 +4,7 @@ import axios from "axios";
 const state = {
     shopCart: [],
     products: [],
-    carts:[]
+    carts:JSON.parse(localStorage.getItem('cartData'))|| []
 }
 const getters = {
     getAllDataShop() {
@@ -13,7 +13,7 @@ const getters = {
     getAllProducts() {
         return state.products
     },
-    getCartData(){
+    getCartData() {
         return state.carts
     }
 
@@ -34,12 +34,12 @@ const actions = {
         commit('productWisegetData', response.data)
     },
 
-    addProductToCart({commit},productData){
-       commit("cartdataShow",productData)
+    addProductToCart({ commit }, productData) {
+        commit("cartdataShow", productData)
     },
 
-    deleteProduct({commit},itemId){
-        commit('deleitemFromCart',itemId)
+    deleteProduct({ commit },id,index) {
+        commit('deleitemFromCart',id,index)
     }
 
 }
@@ -50,17 +50,47 @@ const mutations = {
     productWisegetData(state, data) {
         state.shopCart = data
     },
-    showProducts(state,data){
-     state.products = data
+    showProducts(state, data) {
+        state.products = data
     },
-    cartdataShow(state,pdata){
-     state.carts.push(pdata)
-     console.log(state.carts)
+    cartdataShow(state, product) {
+        //console.log(this.addcart)
+        let gerProductis;
+        let existingProduct = state.carts.filter((item, index) => {
+            if (item.product.id === product.id) {
+                gerProductis = index
+                return true;
+            } else {
+                return false;
+            }
+        })
+
+        if (existingProduct.length) {
+            state.carts[gerProductis].qty++
+        } else {
+            state.carts.push({
+                product: product,
+                qty: 1
+            })
+            localStorage.setItem('cartData',JSON.stringify(state.carts))
+            //console.log(state.carts)
+        }
+
+        //  state.carts.push({ product: pdata, qty: 1 })
+        //console.log(state.carts)
     },
 
-    deleitemFromCart(state, itemId){
-     let idFindindex = state.carts.findIndex(item=>item.id === itemId)
-     state.carts.splice(idFindindex,1)
+    deleitemFromCart(state,data) {
+      //  console.log(state.carts,data)
+        if(state.carts[data.index].qty > 1) {
+            state.carts[data.index].qty--;
+        } else {
+            let getIndex = state.carts.findIndex(item => item.product.id === data.id)
+            console.log(getIndex);
+            state.carts.splice(getIndex, 1);
+            // window.location.reload()
+        }
+        localStorage.setItem('cartData',JSON.stringify(state.carts))
     }
 }
 
